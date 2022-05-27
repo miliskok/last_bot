@@ -33,16 +33,16 @@ def my_inputInt_SecondPart(message, botQuestion, txtQuestion, ResponseHandler):
 
 def dz1(bot, chat_id):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    myname = 'Арина'
+    myname = 'Милана'
     bot.send_message(chat_id, text="Привет, меня зовут " + myname)
 def dz2(bot, chat_id):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    myname = 'Арина'
+    myname = 'Милана'
     myage = '18'
     bot.send_message(chat_id, text="Привет, меня зовут " + myname + ', мне ' + myage)
 def dz3(bot, chat_id):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    myname = 'Арина'
+    myname = 'милана'
     myname2 = myname * 5
     bot.send_message(chat_id, text="Мое имя 5 раз подряд: " + myname2)
 

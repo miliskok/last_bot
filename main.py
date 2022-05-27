@@ -1,38 +1,123 @@
-# Телеграм-бот v.002 - бот создаёт меню, присылает собачку, и анекдот
+# Телеграм-бот v.004
 
-import telebot  # pyTelegramBotAPI	4.3.1
+import telebot  # pyTelegramBotAPI 4.3.1
 from telebot import types
-import DZ
-import requests
-bot = telebot.TeleBot('5106619300:AAFyqqh_FvARsb5E_sATTgar1De4cqgjHOE')  # Создаем экземпляр бота
+import botGames  # бот-игры, файл botGames.py
+import menuBot
+from menuBot import Menu  # в этом модуле есть код, создающий экземпляры классов описывающих моё меню
+import DZ  # домашнее задание от первого урока
+
+
+
+bot = telebot.TeleBot('5106619300:AAFyqqh_FvARsb5E_sATTgar1De4cqgjHOE')
+
 
 # -----------------------------------------------------------------------
-# Функция, обрабатывающая команду /start
-def inputBot(message, text):
-    a = []
-    def ret(message):
-        a.clear()
-        a.append(message.text)
-        return False
-
-    a.clear()
-    mes = bot.send_message(message.chat.id, text)
-    bot.register_next_step_handler(message, ret)
-    while a == []:
-        pass
-    return a[0]
-@bot.message_handler(commands=["start"])
-def start(message, res=False):
+# Функция, обрабатывающая команды
+@bot.message_handler(commands="start")
+def command(message):
     chat_id = message.chat.id
+    bot.send_sticker(chat_id, "CAACAgIAAxkBAAIaeWJEeEmCvnsIzz36cM0oHU96QOn7AAJUAANBtVYMarf4xwiNAfojBA")
+    txt_message = f"Привет, {message.from_user.first_name}! Я тестовый бот для курса программирования на языке Python"
+    bot.send_message(chat_id, text=txt_message, reply_markup=Menu.getMenu(chat_id, "Главное меню").markup)
 
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton("👋 Главное меню")
-    btn2 = types.KeyboardButton("❓ Помощь")
-    markup.add(btn1, btn2)
 
-    bot.send_message(chat_id,
-                     text="Привет, {0.first_name}! Я тестовый бот для курса программирования на языке ПаЙтон".format(
-                         message.from_user), reply_markup=markup)
+
+# -----------------------------------------------------------------------
+# Получение стикеров от юзера
+@bot.message_handler(content_types=['sticker'])
+def get_messages(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, "Это " + message.content_type)
+
+    sticker = message.sticker
+    bot.send_message(message.chat.id, sticker)
+
+    # глубокая инспекция объекта
+    # import inspect,pprint
+    # i = inspect.getmembers(sticker)
+    # pprint.pprint(i)
+
+
+# -----------------------------------------------------------------------
+# Получение аудио от юзера
+@bot.message_handler(content_types=['audio'])
+def get_messages(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, "Это " + message.content_type)
+
+    audio = message.audio
+    bot.send_message(chat_id, audio)
+
+
+# -----------------------------------------------------------------------
+# Получение голосовухи от юзера
+@bot.message_handler(content_types=['voice'])
+def get_messages(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, "Это " + message.content_type)
+
+    voice = message.voice
+    # bot.send_message(message.chat.id, voice)
+
+
+# -----------------------------------------------------------------------
+# Получение фото от юзера
+@bot.message_handler(content_types=['photo'])
+def get_messages(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, "Это " + message.content_type)
+
+    photo = message.photo
+    bot.send_message(message.chat.id, photo)
+
+
+# -----------------------------------------------------------------------
+# Получение видео от юзера
+@bot.message_handler(content_types=['video'])
+def get_messages(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, "Это " + message.content_type)
+
+    video = message.video
+    bot.send_message(message.chat.id, video)
+
+
+# -----------------------------------------------------------------------
+# Получение документов от юзера
+@bot.message_handler(content_types=['document'])
+def get_messages(message):
+    chat_id = message.chat.id
+    mime_type = message.document.mime_type
+    bot.send_message(chat_id, "Это " + message.content_type + " (" + mime_type + ")")
+
+    document = message.document
+    bot.send_message(message.chat.id, document)
+    if message.document.mime_type == "video/mp4":
+        bot.send_message(message.chat.id, "This is a GIF!")
+
+
+# -----------------------------------------------------------------------
+# Получение координат от юзера
+@bot.message_handler(content_types=['location'])
+def get_messages(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, "Это " + message.content_type)
+
+    location = message.location
+    bot.send_message(message.chat.id, location)
+
+
+
+# -----------------------------------------------------------------------
+# Получение контактов от юзера
+@bot.message_handler(content_types=['contact'])
+def get_messages(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, "Это " + message.content_type)
+
+    contact = message.contact
+    bot.send_message(message.chat.id, contact)
 
 
 # -----------------------------------------------------------------------
@@ -42,95 +127,87 @@ def get_text_messages(message):
     chat_id = message.chat.id
     ms_text = message.text
 
-    if ms_text == "Главное меню" or ms_text == "👋 Главное меню" or ms_text == "Вернуться в главное меню":  # ..........
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton("Развлечения")
-        btn2 = types.KeyboardButton("WEB-камера")
-        btn3 = types.KeyboardButton("Управление")
-        btn4 = types.KeyboardButton('дз')
-        back = types.KeyboardButton("Помощь")
-        markup.add(btn1, btn2, btn3, btn4, back)
-        bot.send_message(chat_id, text="Вы в главном меню", reply_markup=markup)
+    cur_user = menuBot.Users.getUser(chat_id)
+    if cur_user is None:
+        cur_user = menuBot.Users(chat_id, message.json["from"])
 
-    elif ms_text == "Развлечения":  # ..................................................................................
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton("Прислать собаку")
-        btn2 = types.KeyboardButton("Прислать анекдот")
-        btn3 = types.KeyboardButton("Прислать гороскоп")
-        back = types.KeyboardButton("Вернуться в главное меню")
-        markup.add(btn1, btn2, btn3, back)
-        bot.send_message(chat_id, text="Развлечения", reply_markup=markup)
+    # проверка = мы нажали кнопку подменю, или кнопку действия
+    subMenu = menuBot.goto_menu(bot, chat_id, ms_text)  # попытаемся использовать текст как команду меню, и войти в него
+    if subMenu is not None:
 
-    elif ms_text == 'Прислать гороскоп':
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        req_goro = requests.get('https://horo.mail.ru')
-        soup = bs4.BeautifulSoup(req_goro.text, 'html.parser')
-        result_find = soup.findAll('div', class_="article__item article__item_alignment_left article__item_html")
-        bot.send_message(chat_id, text=str(result_find))
+        return  # мы вошли в подменю, и дальнейшая обработка не требуется
 
-    elif ms_text == "/dog" or ms_text == "Прислать собаку":  # .........................................................
-        bot.send_message(chat_id, text="🐕")
+    # проверим, является ли текст текущий команды кнопкой действия
+    cur_menu = Menu.getCurMenu(chat_id)
+    if cur_menu is not None and ms_text in cur_menu.buttons:  # проверим, что команда относится к текущему меню
+        module = cur_menu.module
 
-    elif ms_text == "Прислать анекдот":  # .............................................................................
-        bot.send_message(chat_id, text= "Мне можно доверять свои секреты, хотя бы потому что, я на следующий день их забуду.")
+        if module != "":  # проверим, есть ли обработчик для этого пункта меню в другом модуле, если да - вызовем его (принцип инкапсуляции)
+            exec(module + ".get_text_messages(bot, cur_user, message)")
 
-    elif ms_text == "WEB-камера":
-        img2 = open('кот.jpg', 'rb')
-        bot.send_photo(message.chat.id, img2)
+        if ms_text == "Помощь":
+            send_help(bot, chat_id)
 
-    elif ms_text == "Управление":  # ...................................................................................
-        bot.send_message(chat_id, text="еще не готово...")
+    # =======================================
+    elif ms_text.isdigit():
+        ending_game = None
+        winner = None
+        for game in botGames.activeGames.values():
+            for player in game.players.values():
+                if (player.id == message.from_user.id):
+                    if (game.winner is None and game.checkEndGame()):
+                        if (int(ms_text) != game.result):
+                            try_message = bot.send_message(chat_id, text="Попробуй еще раз!")
+                            game.message_to_delete.append(try_message)
+                        else:
+                            ending_game = game
+                            winner = player
+                        break
+        if (ending_game is not None):
+            ending_game.winner = winner
+            ending_game.endGame()
+    else:  # ======================================= случайный текст
+        bot.send_message(chat_id, text="Мне жаль, я не понимаю вашу команду: " + ms_text)
+        menuBot.goto_menu(bot, chat_id, "Главное меню")
 
-    elif ms_text == "Помощь" or ms_text == "/help":  # .................................................................
-        bot.send_message(chat_id, "Автор: Мясникова Милана")
-        key1 = types.InlineKeyboardMarkup()
-        btn1 = types.InlineKeyboardButton(text="Напишите мне", url="https://t.me/p1zdyushka")
-        key1.add(btn1)
-        img3 = open('пип.png', 'rb')
-        bot.send_photo(chat_id, img3, reply_markup=key1)
-
-    elif ms_text == 'дз':
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        p1 = types.KeyboardButton('Задание 1')
-        p2 = types.KeyboardButton('Задание 2')
-        p3 = types.KeyboardButton('Задание 3')
-        p4 = types.KeyboardButton('Задание 4')
-        p5 = types.KeyboardButton('Задание 5')
-        p6 = types.KeyboardButton('Задание 6')
-        p7 = types.KeyboardButton('Задание 7')
-        p8 = types.KeyboardButton('Задание 8')
-        p9 = types.KeyboardButton('Задание 9')
-        p10 = types.KeyboardButton('Задание 10')
-        back = types.KeyboardButton("Вернуться в главное меню")
-        markup.add(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, back)
-        bot.send_message(chat_id, text='дз', reply_markup=markup)
-    elif ms_text == 'Задание 1':
-        DZ.dz1(bot, chat_id)
-    elif ms_text == 'Задание 2':
-        DZ.dz2(bot, chat_id)
-    elif ms_text == 'Задание 3':
-        DZ.dz3(bot, chat_id)
-    elif ms_text == 'Задание 4':
-        DZ.dz4(bot, chat_id, message)
-    elif ms_text == 'Задание 5':
-        DZ.dz5(bot, chat_id, message)
-    elif ms_text == "Задание 6":
-        DZ.dz6(bot, chat_id)
-    elif ms_text == "Задание 7":
-        DZ.dz7(bot, chat_id, message)
-    elif ms_text == "Задание 8":
-        DZ.dz8(bot, chat_id, message)
-    elif ms_text == "Задание 9":
-        DZ.dz9(bot, chat_id, message)
-    elif ms_text == "Задание 10":
-        DZ.dz10(bot, chat_id, message)
-
-
-
-    else:# ...........................................................................................................
-        bot.send_message(chat_id, text="Я тебя слышу!!! Ваше сообщение: " + ms_text)
 
 # -----------------------------------------------------------------------
-bot.polling(none_stop=True, interval=0) # Запускаем бота
+@bot.callback_query_handler(func=lambda call: True)
+def callback_worker(call):
+    # если требуется передать один или несколько параметров в обработчик кнопки,
+    # используйте методы Menu.getExtPar() и Menu.setExtPar()
+    # call.data это callback_data, которую мы указали при объявлении InLine-кнопки
+    # После обработки каждого запроса вызовете метод answer_callback_query(), чтобы Telegram понял, что запрос обработан
+    chat_id = call.message.chat.id
+    message_id = call.message.id
+    cur_user = menuBot.Users.getUser(chat_id)
+    if cur_user is None:
+        cur_user = menuBot.Users(chat_id, call.message.json["from"])
 
-print()
+    tmp = call.data.split("|")
+    menu = tmp[0] if len(tmp) > 0 else ""
+    cmd = tmp[1] if len(tmp) > 1 else ""
+    par = tmp[2] if len(tmp) > 2 else ""
+
+    if menu == "GameRPSm":
+        botGames.callback_worker(bot, cur_user, cmd, par, call)  # обработчик кнопок игры находится в модули игры
+
+
+# -----------------------------------------------------------------------
+def send_help(chat_id):
+    global bot
+    bot.send_message(chat_id, "Автор: Мясникова Милана")
+    key1 = types.InlineKeyboardMarkup()
+    btn1 = types.InlineKeyboardButton(text="Напишите мне", url="https://t.me/p1zdyushka")
+    key1.add(btn1)
+    img3 = open('пип.png', 'rb')
+    bot.send_photo(chat_id, img3, reply_markup=key1)
+
+    bot.send_message(chat_id, "Активные пользователи чат-бота:")
+    for el in menuBot.Users.activeUsers:
+        bot.send_message(chat_id, menuBot.Users.activeUsers[el].getUserHTML(), parse_mode='HTML')
+
+# ---------------------------------------------------------------------
+
+
+bot.polling(none_stop=True, interval=0)  # Запускаем бота
