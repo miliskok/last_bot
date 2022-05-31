@@ -6,7 +6,7 @@ import botGames  # бот-игры, файл botGames.py
 import menuBot
 from menuBot import Menu  # в этом модуле есть код, создающий экземпляры классов описывающих моё меню
 import DZ  # домашнее задание от первого урока
-
+import fun
 
 
 bot = telebot.TeleBot('5106619300:AAFyqqh_FvARsb5E_sATTgar1De4cqgjHOE')

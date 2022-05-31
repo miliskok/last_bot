@@ -2,174 +2,193 @@ import telebot
 from telebot import types
 from random import *
 
+import time
+def get_text_messages(bot, cur_user, message):
+    chat_id = message.chat.id
+    ms_text = message.text
 
-gameb = ['Камень', 'Ножницы', 'Бумага']
+    if ms_text == "Задание-1":
+        dz1(bot, chat_id)
+
+    elif ms_text == "Задание-2":
+        dz2(bot, chat_id)
+
+    elif ms_text == "Задание-3":
+        dz3(bot, chat_id)
+
+    elif ms_text == "Задание-4":
+        dz45(bot, chat_id)
+
+    elif ms_text == "Задание-5":
+        dz6(bot, chat_id)
+
+    elif ms_text == "Задание-6":
+        dz7n(bot, chat_id)
+        dz7a(bot,chat_id)
+
+    elif ms_text == "Задание-7":
+        dz92(bot, chat_id)
+
+    elif ms_text == "Задание-8":
+        dz91(bot, chat_id)
+
+    elif ms_text == "Задание-9":
+        dz10(bot, chat_id)
 
 
+def dz1(bot, chat_id):
+    dz1_ResponseHandler = lambda message: bot.send_message(chat_id, f'Привет, {message.text}!')
+    my_input(bot, chat_id, 'Введите ваше имя:', dz1_ResponseHandler)
+
+#-------------------------------------------------------------------------------------------------
+
+def dz2(bot, chat_id):
+    def dz2_ResponseHandler(bot, chat_id, age_int):
+        bot.send_message(chat_id, text=f"Вам {age_int} лет!")
+
+    my_inputInt(bot, chat_id, "Сколько вам лет?", dz2_ResponseHandler)
+
+#--------------------------------------------------------------------------------------------------
+
+def dz3(bot, chat_id):
+    dz3_ResponseHandler = lambda message: bot.send_message(chat_id, f"{message.text*5}")
+    my_input(bot, chat_id, 'Введите ваше имя:', dz3_ResponseHandler)
+
+#--------------------------------------------------------------------------------------------------
+
+def dz45(bot, chat_id):
+    def dz45_ResponseHandler(bot, chat_id, age):
+        if 0 < age < 7:
+            bot.send_message(chat_id, "Почему ты не в садике")
+        if 8 < age < 18:
+            bot.send_message(chat_id, "Иди делай уроки <3")
+        if age > 19:
+            bot.send_message(chat_id, "Какого это жить в ваши " + str(age) + "?")
+
+    my_inputInt(bot, chat_id, "Введите возраст.", dz45_ResponseHandler)
+
+#--------------------------------------------------------------------------------------------------
+
+def dz6(bot, chat_id):
+    dz6_ResponseHandler = lambda message: bot.send_message(chat_id, f"Привет, {message.text}! Смотри \n"
+                                                                    f"{str(message.text[1:len(message.text) - 1:])}\n"
+                                                                    f"{str(message.text[::-1])}\n"
+                                                                    f"{str(message.text[-3::])}\n"
+                                                                    f"{str(message.text[:5:])}\n")
+    my_input(bot, chat_id, 'Введите ваше имя:', dz6_ResponseHandler)
+
+#--------------------------------------------------------------------------------------------------
+
+def dz7n(bot, chat_id):
+    dz7n_ResponseHandler = lambda message : bot.send_message(chat_id, f"Привет, {message.text}! Смотри \n"
+                                                                      f"Длина вашего имени: " + f"{str(len(message.text))}\n")
+
+    my_input(bot, chat_id, "Введите ваше имя: ", dz7n_ResponseHandler)
+
+
+def dz7a(bot, chat_id):
+    def dz7a_ResponseHandler(bot, chat_id, age):
+        bot.send_message(chat_id, "Сумма символов в вашем имени: " + str((age // 10) + (age % 10)))
+        bot.send_message(chat_id, "Произведение символов в вашем имени: " + str((age // 10) * (age % 10)))
+
+    my_inputInt(bot, chat_id, "Введите возраст.", dz7a_ResponseHandler)
+
+#--------------------------------------------------------------------------------------------------
+
+def dz8(bot, chat_id):
+    dz8_ResponseHandler = lambda message : bot.send_message(chat_id, f"Привет, {message.text}! Смотри \n"
+                                                                         f"{str.upper(message.text)}\n"
+                                                                         f"{str.lower(message.text)}\n"
+                                                                         f"{str.upper(message.text)[0:1:] + str.lower(message.text)[1::]}\n"
+                                                                         f"{str.lower(message.text)[0:1:] + str.upper(message.text)[1::]}\n")
+    my_input(bot, chat_id, 'Введите ваше имя:', dz8_ResponseHandler)
+
+#--------------------------------------------------------------------------------------------------
+
+def dz92(bot, chat_id):
+    def dz92_ResponseHandler(bot, chat_id, age):
+        if age > 150 or age < 0 :
+            bot.send_message(chat_id, 'Ошибка, такого возраста не существует!')
+        else:
+            bot.send_message(chat_id, 'В возрасте нет ошибок')
+
+    my_inputInt(bot, chat_id, 'Введите возраст: ', dz92_ResponseHandler)
+
+def dz91(bot, chat_id):
+    def dz91_ResponseHandler(bot, chat_id, name):
+        spaces = 0
+        for i in range(0, len(name)) :
+            if name[i] == ' ' :
+                spaces += 1
+                break
+            else :
+                spaces = 0
+        if spaces == 0 :
+            bot.send_message(chat_id, 'В имени нет ошибок')
+        else :
+            bot.send_message(chat_id, 'В имени есть ошибка.')
+
+    my_inputStr(bot, chat_id, 'Введите имя: ', dz91_ResponseHandler)
+
+#--------------------------------------------------------------------------------------------------
+
+def dz10(bot, chat_id):
+    bot.send_message(chat_id, 'Приветствую вас на шоу кто хочет стать миллионером!')
+    bot.send_message(chat_id, 'Вопрос на миллион рублей:')
+    bot.send_message(chat_id, '.')
+    bot.send_message(chat_id, '..')
+    bot.send_message(chat_id, '...')
+    bot.send_message(chat_id, 'Сколько будет 2+2*2?')
+
+    def dz10_ResponseHandler(bot, chat_id, ans):
+        if ans == 6 :
+            bot.send_message(chat_id, '.')
+            bot.send_message(chat_id, '..')
+            bot.send_message(chat_id, '...')
+            bot.send_message(chat_id, '🧠Вы ответили верно! Ваше IQ больше 10! Поздравляю!🧠')
+        elif ans == 8 :
+            bot.send_message(chat_id, '.')
+            bot.send_message(chat_id, '..')
+            bot.send_message(chat_id, '...')
+            bot.send_message(chat_id, "❌🧠 0_0")
+        else :
+            bot.send_message(chat_id, '.')
+            bot.send_message(chat_id, '..')
+            bot.send_message(chat_id, '...')
+            bot.send_message(chat_id, 'Поздравляем! Ошибка 🥲')
+
+    my_inputInt(bot, chat_id, "Иии ваш ответ???", dz10_ResponseHandler)
+
+
+
+
+#дописать
 def my_input(bot, chat_id, txt, ResponseHandler):
     message = bot.send_message(chat_id, text=txt)
     bot.register_next_step_handler(message, ResponseHandler)
-# -----------------------------------------------------------------------
+
 def my_inputInt(bot, chat_id, txt, ResponseHandler):
 
     message = bot.send_message(chat_id, text=txt)
     bot.register_next_step_handler(message, my_inputInt_SecondPart, botQuestion=bot, txtQuestion=txt, ResponseHandler=ResponseHandler)
-    # bot.register_next_step_handler(message, my_inputInt_return, bot, txt, ResponseHandler)  # то-же самое, но короче
 
 def my_inputInt_SecondPart(message, botQuestion, txtQuestion, ResponseHandler):
     chat_id = message.chat.id
     try:
-        if message.content_type != "text":
-            raise ValueError
         var_int = int(message.text)
-        # данные корректно преобразовались в int, можно вызвать обработчик ответа, и передать туда наше число
         ResponseHandler(botQuestion, chat_id, var_int)
     except ValueError:
         botQuestion.send_message(chat_id,
                          text="Можно вводить ТОЛЬКО целое число в десятичной системе исчисления (символами от 0 до 9)!\nПопробуйте еще раз...")
-        my_inputInt(botQuestion, chat_id, txtQuestion, ResponseHandler)  # это не рекурсия, но очень похоже
-        # у нас пара процедур, которые вызывают друг-друга, пока пользователь не введёт корректные данные,
-        # и тогда этот цикл прервётся, и управление перейдёт "наружу", в ResponseHandler
+        my_inputInt(botQuestion, chat_id, txtQuestion, ResponseHandler)
 
-def dz1(bot, chat_id):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    myname = 'Милана'
-    bot.send_message(chat_id, text="Привет, меня зовут " + myname)
-def dz2(bot, chat_id):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    myname = 'Милана'
-    myage = '18'
-    bot.send_message(chat_id, text="Привет, меня зовут " + myname + ', мне ' + myage)
-def dz3(bot, chat_id):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    myname = 'милана'
-    myname2 = myname * 5
-    bot.send_message(chat_id, text="Мое имя 5 раз подряд: " + myname2)
+def my_inputStr(bot, chat_id, txt, ResponseHandler):
+    message = bot.send_message(chat_id, text=txt)
+    bot.register_next_step_handler(message, my_inputStr_SecondPart, botQuestion=bot, txtQuestion=txt,
+                                   ResponseHandler=ResponseHandler)
 
-def dz4(bot, chat_id, message):
-    bot.send_message(chat_id, 'Как тебя зовут?')
-    bot.register_next_step_handler(message, dz4_1, bot)
+def my_inputStr_SecondPart(message, botQuestion, txtQuestion, ResponseHandler):
+    chat_id = message.chat.id
 
-def dz4_1( message, bot):
-    bot.send_message(message.chat.id, f'Приятно познакомиться, {message.text} \nСколько тебе лет?')
-    bot.register_next_step_handler(message, dz4_2, bot)
-
-def dz4_2(message, bot):
-    if message.text.isnumeric()== True:
-        bot.send_message(message.chat.id, f'Тебе уже {message.text}! Впринципе, выглядишь вполне на свой возраст)')
-    while message.text.isnumeric() == False:
-        bot.send_message(message.chat.id, 'Введите верный возраст!!')
-        break
-
-
-
-def dz5(bot, chat_id, message):
-    bot.send_message(chat_id, "Как тебя зовут?")
-    bot.register_next_step_handler(message, dz5_1, bot)
-
-def dz5_1(message, bot):
-    global name2
-    name2 = message.text
-    name2 = name2[7::-1]
-    bot.send_message(message.chat.id, "Наоборот вот так" + ' ' + name2)
-
-def dz6(bot, chat_id):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    dz6_ResponseHandler = lambda message: bot.send_message(chat_id,
-                                                           f"Добро пожаловать {message.text}! У тебя красивое имя, в нём {len(message.text)} букв!")
-    my_input(bot, chat_id, "Как тебя зовут?", dz6_ResponseHandler)
-
-def dz7(bot, chat_id, message):
-    bot.send_message(chat_id, 'Как тебя зовут?')
-    bot.register_next_step_handler(message, dz7_1, bot)
-
-def dz7_1(message, bot):
-    global name4
-    name4 = message.text
-    if name4.islower() == True:
-        bot.send_message(message.chat.id, 'Есть нижний регитср')
-    elif name4.isupper() == True:
-        bot.send_message(message.chat.id, 'Есть верхний регитср')
-    else:
-        bot.send_message(message.chat.id, 'Есть верхний регитср и нижний')
-
-def dz8(bot, chat_id, message):
-    bot.send_message(chat_id, "Как тебя зовут?")
-    bot.register_next_step_handler(message, dz8_1, bot)
-
-def dz8_1(message, bot):
-    global name5
-    name5 = message.text
-    for i in name5:
-        if i == " ":
-            bot.send_message(message.chat.id, 'Введите имя без пробелов')
-
-        elif i == "0" or i == "1" or i == "2" or i == "3" or i == "4" or i == "5" or i == "6" or i == "7" or i == "8" or i == "9":
-            bot.send_message(message.chat.id, 'Введите имя без цифр')
-
-    bot.send_message(message.chat.id, 'Сколько тебе лет?')
-    bot.register_next_step_handler(message, dz8_2, bot)
-def dz8_2(message, bot):
-    global age5
-    age5 = int(message.text)
-    while age5 == 0:
-        try:
-            age5 = int(message.text)
-        except Exception:
-            bot.send_message(message.chat.id, "Вводите коректные цифры!!!!")
-    if age5 < 150 and age5 > 0:
-        bot.send_message(message.chat.id,
-                         ' Твоё имя без ошибок ' + name5 + ' Нормальный возраст ' + ' ' + str(age5) + ' ')
-
-def dz9(bot, chat_id, message):
-    bot.send_message(chat_id, '2+2*2?')
-    bot.register_next_step_handler(message, dz9_1, bot)
-
-def dz9_1(message, bot):
-    global age
-    age = int(message.text)
-    while age == 0:
-        try:
-            age = int(message.text)
-        except Exception:
-            bot.send_message(message.chat.id, "Вводите цифры!!!!")
-    if age == 6:
-        bot.send_message(message.chat.id, "Правильно")
-    else:
-        bot.send_message(message.chat.id, "Попробуй еще раз")
-    age = 0
-
-
-# -----------------------------------------------------------------------
-
-
-def dz10(bot, chat_id, message):
-    bot.send_message(chat_id, 'Камень, ножницы или бумага?')
-    bot.register_next_step_handler(message, reg_game, bot)
-def reg_game(message, bot):
-    global game
-    global gameb
-    global value
-    value = choice(gameb)
-    game = message.text
-    if game == 'Камень' or game == 'камень':
-        if value == 'Камень' or value == 'камень':
-            bot.send_message(message.chat.id, 'Ничья)))')
-        if value == 'Ножницы' or value == 'ножницы':
-            bot.send_message(message.chat.id, 'Вы победили, я поставила ножницы')
-        if value == 'Бумага' or value == 'бумага':
-            bot.send_message(message.chat.id, 'Вы проиграли , я поставила бумагу')
-    if game == 'Ножницы' or game == 'ножницы':
-        if value == 'Камень' or value == 'камень':
-            bot.send_message(message.chat.id, 'Вы проиграли , я поставила камень')
-        if value == 'Ножницы' or value == 'ножницы':
-            bot.send_message(message.chat.id, 'Ничья))')
-        if value == 'Бумага' or value == 'бумага':
-            bot.send_message(message.chat.id, 'Вы выиграли , я поставила бумагу')
-    if game == 'Бумага' or game == 'бумага':
-        if value == 'Камень' or value == 'камень':
-            bot.send_message(message.chat.id, 'Вы выиграли , я поставила камень')
-        if value == 'Ножницы' or value == 'ножницы':
-            bot.send_message(message.chat.id, 'Вы проиграли , я поставила ножницы')
-        if value == 'Бумага' or value == 'бумага':
-            bot.send_message(message.chat.id, 'Ничья)))')
+    var_str = str(message.text)
+    ResponseHandler(botQuestion, chat_id, var_str)
