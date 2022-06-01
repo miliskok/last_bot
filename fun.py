@@ -28,6 +28,13 @@ def get_text_messages(bot, cur_user, message):
     elif ms_text == "Угадай кто?":
         get_ManOrNot(bot, chat_id)
 
+    elif ms_text == "Прислать гороскоп":
+        get_goro(bot, chat_id)
+
+    elif ms_text == "Прислать кота":
+        bot.send_photo(chat_id, photo=get_catURL(), caption="Вот тебе кошечка!")
+
+
 
 
 
@@ -142,3 +149,21 @@ def get_randomFilm():
     infoFilm["фильм_url"] = url + details[7].contents[0]["href"]
 
     return infoFilm
+
+
+def get_goro(bot, chat_id):
+    import requests
+    from bs4 import BeautifulSoup
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    req = requests.get('https://horo.mail.ru')
+    soup = BeautifulSoup(req.text, "html.parser")
+    allgoros = soup.findAll('div', class_="article__item article__item_alignment_left article__item_html")
+    bot.send_message(chat_id, text=allgoros)
+
+def get_catURL():
+    url = ""
+    req = requests.get("https://api.thecatapi.com/v1/images/search")
+    if req.status_code == 200:
+        r_json = req.json()
+        url = r_json[0]["url"]
+    return url

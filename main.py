@@ -194,8 +194,7 @@ def callback_worker(call):
 
 
 # -----------------------------------------------------------------------
-def send_help(chat_id):
-    global bot
+def send_help(bot, chat_id):
     bot.send_message(chat_id, "Автор: Мясникова Милана")
     key1 = types.InlineKeyboardMarkup()
     btn1 = types.InlineKeyboardButton(text="Напишите мне", url="https://t.me/p1zdyushka")
